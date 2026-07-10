@@ -12,6 +12,8 @@
     ../../modules/dev-tools.nix
     ../../modules/nix-config.nix
     ../../modules/users.nix
+    ../../modules/flatpak.nix
+    ../../modules/docker.nix
   ];
 
   system.stateVersion = "25.11";

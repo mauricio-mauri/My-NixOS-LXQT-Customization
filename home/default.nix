@@ -6,6 +6,7 @@
     ./git.nix
     ./dev.nix
     ./packages.nix
+    ./zen.nix
   ];
 
   home.username = "mauri";

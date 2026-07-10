@@ -1,12 +1,24 @@
-{ ... }:
+{ pkgs, inputs, ... }:
 
 {
-  services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
+  programs.mango.enable = true;
+  programs.dank-material-shell = {
+    enable = true;
+    dgop.package = inputs.dgop.packages.${pkgs.system}.default;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --cmd mango";
+        user = "greeter";
+      };
+    };
+  };
 
   services.xserver.xkb = {
-    layout = "us";
+    layout = "us,br";
     variant = "";
   };
 

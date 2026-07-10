@@ -10,5 +10,7 @@
     unzip
     ripgrep
     fd
+    gcc
+    gnumake
   ];
 }
