@@ -5,7 +5,7 @@
 
   programs.dank-material-shell = {
     enable = true;
-    enableSystemMonitoring = true;
+    quickshell.package = inputs.quickshell.packages.${pkgs.system}.quickshell;
     dgop.package = inputs.dgop.packages.${pkgs.system}.default;
   };
 
