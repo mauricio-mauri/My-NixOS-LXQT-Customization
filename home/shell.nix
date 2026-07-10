@@ -7,7 +7,7 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
-    initExtra = ''
+    initContent = ''
       export EDITOR="nvim"
       export VISUAL="nvim"
     '';
