@@ -2,19 +2,15 @@
 
 {
   programs.mango.enable = true;
+
   programs.dank-material-shell = {
     enable = true;
     dgop.package = inputs.dgop.packages.${pkgs.system}.default;
   };
 
-  services.greetd = {
+  services.displayManager.sddm = {
     enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --cmd mango";
-        user = "greeter";
-      };
-    };
+    wayland.enable = true;
   };
 
   services.xserver.xkb = {

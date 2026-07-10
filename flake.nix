@@ -44,7 +44,12 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            users.mauri = import ./home;
+            users.mauri = {
+              imports = [
+                ./home
+                inputs.mangowm.hmModules.mango
+              ];
+            };
             backupFileExtension = "backup";
             extraSpecialArgs = { inherit inputs; };
           };
