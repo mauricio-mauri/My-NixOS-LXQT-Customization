@@ -29,7 +29,7 @@
 
       # DMS appearance
       border_radius = 12;
-      borderpx = 0;
+      borderpx = 2;
       focused_opacity = 1.0;
       unfocused_opacity = 0.9;
 
@@ -100,7 +100,7 @@
         "SUPER+ALT,l,spawn,dms ipc call lock lock"
 
         # Terminal
-        "Alt,Return,spawn,foot"
+        "Alt,Return,spawn,alacritty"
 
         # Kill client
         "ALT,q,killclient"

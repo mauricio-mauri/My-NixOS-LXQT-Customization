@@ -6,6 +6,5 @@
     jq
     yq-go
     file
-    which
   ];
 }
