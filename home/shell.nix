@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.zsh = {
@@ -6,12 +6,6 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-
-    oh-my-zsh = {
-      enable = true;
-      theme = "pure";
-      plugins = [ "git" "sudo" "docker" ];
-    };
 
     shellAliases = {
       update = "sudo nixos-rebuild switch --flake ~/.mynixos#nixos";
@@ -21,6 +15,15 @@
     initContent = ''
       export EDITOR="nvim"
       export VISUAL="nvim"
+      export PATH="$HOME/.opencode/bin:$PATH"
+
+      autoload -U promptinit
+      promptinit
+      prompt pure
     '';
   };
+
+  home.packages = with pkgs; [
+    pure-prompt
+  ];
 }
