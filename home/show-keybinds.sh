@@ -46,7 +46,7 @@ cat << 'EOF'
 
   Layout & Tags
   ─────────────────────────────────────────────
-  Super + N             Switch Layout
+  Super + Shift + N     Switch Layout
   Super + Arrow         Switch Tag
   Ctrl + Arrow          Tag with Client
   Ctrl + Super + Arr    Move Tag
@@ -70,7 +70,7 @@ cat << 'EOF'
   Ctrl + Alt + Arr      Resize Window
   Super + LMB           Move Window
   Super + RMB           Resize Window
-  Middle Click          Toggle Maximize
+  Super + Middle Click  Toggle Maximize
 
   Media
   ─────────────────────────────────────────────
