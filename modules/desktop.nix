@@ -24,5 +24,6 @@
   environment.systemPackages = with pkgs; [
     alacritty
     foot
+    papirus-icon-theme
   ];
 }

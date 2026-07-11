@@ -68,6 +68,7 @@
         "isnoborder:1,appid:^com\\.mitchellh\\.ghostty$"
         "isnoborder:1,appid:^kitty$"
         "isfloating:1,appid:^org\\.quickshell$"
+        "isfloating:1,appid:^MangoHelp$"
       ];
 
       # Layouts
@@ -101,6 +102,9 @@
 
         # Terminal
         "Alt,Return,spawn,alacritty"
+
+        # Keybinds help
+        "SUPER,F1,spawn,alacritty --class MangoHelp -e ~/.config/mango/show-keybinds.sh"
 
         # Kill client
         "ALT,q,killclient"
@@ -212,4 +216,8 @@
   xdg.configFile."mango/dms/colors.conf".text = "";
   xdg.configFile."mango/dms/layout.conf".text = "";
   xdg.configFile."mango/dms/outputs.conf".text = "";
+  xdg.configFile."mango/show-keybinds.sh" = {
+    source = ./show-keybinds.sh;
+    executable = true;
+  };
 }

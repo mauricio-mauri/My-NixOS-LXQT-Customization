@@ -8,6 +8,7 @@
     ./packages.nix
     ./zen.nix
     ./mango.nix
+    ./gtk.nix
   ];
 
   home.username = "mauri";
