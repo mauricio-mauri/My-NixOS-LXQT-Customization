@@ -13,6 +13,11 @@
       plugins = [ "git" "sudo" "docker" ];
     };
 
+    shellAliases = {
+      update = "sudo nixos-rebuild switch --flake ~/.mynixos#nixos";
+      edit = "sudo nvim ~/.mynixos";
+    };
+
     initContent = ''
       export EDITOR="nvim"
       export VISUAL="nvim"
