@@ -9,6 +9,7 @@
     ./zen.nix
     ./mango.nix
     ./gtk.nix
+    ./alacritty.nix
   ];
 
   home.username = "mauri";

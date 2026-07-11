@@ -26,5 +26,6 @@
     alacritty
     foot
     papirus-icon-theme
+    dolphin
   ];
 }
