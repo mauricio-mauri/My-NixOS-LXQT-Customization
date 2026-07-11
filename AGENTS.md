@@ -14,14 +14,19 @@ Personal NixOS system configuration for user `mauri` (Mauricio).
 ## Key system facts
 
 - **Locale**: `pt_BR.UTF-8`, timezone `America/Belem`
-- **Desktop**: MangoWM + Dank Material Shell on Wayland, SDDM (Wayland mode)
-- **Boot**: GRUB on `/dev/sda` (BIOS system, no os-prober)
+- **Desktop**: MangoWM + Dank Material Shell on Wayland, SDDM (Wayland mode, Catppuccin Mocha Mauve theme)
+- **Boot**: GRUB on `/dev/sda` (BIOS system, no os-prober, hidden by default — Shift to show)
+- **Plymouth**: Enabled with bgrt theme + silent boot
+- **Shell**: Zsh (default), oh-my-zsh with pure theme
 - **Kernel**: `linuxPackages_latest`
 - **Platform**: x86_64-linux
 - **stateVersion**: `25.11`
 - **Notable settings**: `nix-ld` enabled, `allowUnfree` enabled, flakes enabled
 - **SSH**: OpenSSH enabled, password auth disabled
 - **Flake inputs**: nixpkgs, home-manager, mangowm, dms, dgop, zen-browser, quickshell (upstream for 0.3.0+)
+- **Nerd-fonts**: JetBrains Mono, Fira Code
+- **Icon theme**: Papirus-Dark
+- **Keyboard**: us,br — Super+Shift+Space to switch (MangoWM native)
 
 ## Applying changes
 
@@ -52,3 +57,7 @@ After system rebuild, home-manager activates automatically. If home-manager back
 - MangoWM HM module: `inputs.mangowm.hmModules.mango` (not `homeModules.mango`)
 - `input` group required for DMS evdev manager
 - `enableSystemMonitoring` defaults to `true` when `enable = true` — setting explicitly is a no-op
+- MangoWM keyboard layouts: `xkb_rules_layout` / `xkb_rules_variant` (not `services.xserver.xkb`)
+- MangoWM `switch_keyboard_layout` — NOT the same as `switch_layout` (window layouts)
+- GRUB hidden: `timeoutStyle = "hidden"` + `timeout = 0` — Shift/ESC/F4 to show menu
+- Plymouth silent boot: `consoleLogLevel = 3`, `initrd.verbose = false`, `quiet` kernel param

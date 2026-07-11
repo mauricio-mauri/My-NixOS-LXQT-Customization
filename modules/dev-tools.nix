@@ -12,5 +12,6 @@
     fd
     gcc
     gnumake
+    fastfetch
   ];
 }

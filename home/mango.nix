@@ -27,6 +27,10 @@
         "QT_QPA_PLATFORMTHEME,gtk3"
       ];
 
+      # Keyboard layouts
+      xkb_rules_layout = "us,br";
+      xkb_rules_variant = ",";
+
       # DMS appearance
       border_radius = 12;
       borderpx = 2;
@@ -84,13 +88,14 @@
         "id:9,layout_name:tile"
       ];
 
-      # DMS keybindings
-      bind = [
-        # Reload config
-        "SUPER,r,reload_config"
+        # DMS keybindings
+        bind = [
+          # Reload config
+          "SUPER,r,reload_config"
 
-        # DMS launchers
-        "SUPER,space,spawn,dms ipc call spotlight toggle"
+          # DMS launchers
+          "SUPER,space,spawn,dms ipc call spotlight toggle"
+          "SUPER+SHIFT,space,switch_keyboard_layout"
         "SUPER,v,spawn,dms ipc call clipboard toggle"
         "SUPER,m,spawn,dms ipc call processlist focusOrToggle"
         "SUPER,comma,spawn,dms ipc call settings focusOrToggle"

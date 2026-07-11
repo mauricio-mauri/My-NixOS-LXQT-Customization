@@ -14,7 +14,10 @@
     ../../modules/users.nix
     ../../modules/flatpak.nix
     ../../modules/docker.nix
+    ../../modules/fonts.nix
   ];
+
+  programs.zsh.enable = true;
 
   system.stateVersion = "25.11";
 }
