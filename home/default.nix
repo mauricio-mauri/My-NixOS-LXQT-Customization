@@ -6,7 +6,6 @@
     ./git.nix
     ./dev.nix
     ./packages.nix
-    ./zen.nix
     ./mango.nix
     ./gtk.nix
     ./alacritty.nix

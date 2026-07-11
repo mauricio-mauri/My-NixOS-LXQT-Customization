@@ -213,8 +213,7 @@
         "home-manager": "home-manager",
         "mangowm": "mangowm",
         "nixpkgs": "nixpkgs_2",
-        "quickshell": "quickshell",
-        "zen-browser": "zen-browser"
+        "quickshell": "quickshell"
       }
     },
     "scenefx": {
@@ -252,26 +251,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default-linux",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1783668749,
-        "narHash": "sha256-EDJjJYGT5pQKTBqmz+OA2sqE20kjj6mP699JFGDzse4=",
-        "owner": "youwen5",
-        "repo": "zen-browser-flake",
-        "rev": "e8041a3571e8cadb57dc18a3d6362d753510b94a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "youwen5",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

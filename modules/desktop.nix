@@ -26,6 +26,6 @@
     alacritty
     foot
     papirus-icon-theme
-    dolphin
+    kdePackages.dolphin
   ];
 }
