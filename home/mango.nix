@@ -135,7 +135,7 @@
         "ALT,z,toggle_scratchpad"
 
         # Layout
-        "SUPER,n,switch_layout"
+        "SUPER+SHIFT,n,switch_layout"
 
         # Tag switch
         "SUPER,Left,viewtoleft,0"
@@ -201,7 +201,7 @@
       # Mouse bindings
       mousebind = [
         "SUPER,btn_left,moveresize,curmove"
-        "NONE,btn_middle,togglemaximizescreen,0"
+        "SUPER,btn_middle,togglemaximizescreen,0"
         "SUPER,btn_right,moveresize,curresize"
       ];
 
