@@ -1,112 +1,78 @@
-# mynixos
+# NixOS clássico com LXQt
 
-Configuração NixOS para o usuário `mauri` (Mauricio). Sistema declarativo completo usando flakes, home-manager e módulos modulares.
+Configuração modular para dois alvos: o laptop físico e uma VM de teste. Usa os módulos padrão do NixOS, o canal estável 26.05 e LXQt com LightDM. Não usa Flakes nem Home Manager.
 
-## Resumo do Sistema
+## Arquitetura
 
-| Componente | Tecnologia |
-|---|---|
-| **OS** | NixOS 25.11 (Xantusia) |
-| **Desktop** | MangoWM + Dank Material Shell (Wayland) |
-| **Login** | SDDM (Catppuccin Mocha Mauve) |
-| **Boot** | GRUB (hidden) + Plymouth (bgrt theme) |
-| **Shell** | Zsh + pure-prompt |
-| **Plataforma** | x86_64-linux, BIOS (Insyde firmware) |
-
-## Estrutura do Repositório
-
-```
-~/.mynixos/
-├── flake.nix                    # Entry point do flake
-├── flake.lock                   # Inputs bloqueados
-├── hosts/nixos/
-│   ├── default.nix              # Importa todos os módulos
-│   └── hardware-configuration.nix  # Auto-gerado (não editar)
-├── modules/                     # Módulos NixOS (sistema)
-│   ├── boot.nix                 # GRUB, Plymouth, kernel
-│   ├── desktop.nix              # MangoWM, DMS, SDDM, Papirus
-│   ├── fonts.nix                # Nerd-fonts
-│   ├── dev-tools.nix            # git, neovim, gcc, fastfetch
-│   ├── users.nix                # Usuário mauri
-│   ├── audio.nix                # PipeWire
-│   ├── networking.nix           # NetworkManager
-│   ├── ssh.nix                  # OpenSSH
-│   ├── docker.nix               # Docker
-│   ├── flatpak.nix              # Flatpak + Flathub
-│   ├── nix-config.nix           # Flakes, allowUnfree, nix-ld
-│   └── locale.nix               # pt_BR.UTF-8, America/Belem
-└── home/                        # Home-manager (usuário)
-    ├── default.nix              # Importa todos os módulos home
-    ├── shell.nix                # Zsh, pure-prompt, aliases
-    ├── git.nix                  # Git config
-    ├── dev.nix                  # Neovim
-    ├── packages.nix             # tree, jq, yq-go, file
-    ├── zen.nix                  # Zen Browser
-    ├── mango.nix                # MangoWM config completa
-    ├── gtk.nix                  # Papirus-Dark icon theme
-    └── show-keybinds.sh         # Script de ajuda (SUPER+F1)
+```text
+configuration.nix              # perfil padrão do laptop
+configuration-vm.nix           # perfil alternativo da VM
+hosts/
+├── laptop/default.nix          # opções específicas do laptop
+└── vm/default.nix              # opções específicas da VM
+modules/                       # módulos NixOS reutilizados pelos dois hosts
+dotfiles/                      # arquivos de usuário, copiados manualmente
 ```
 
-## Como Aplicar Mudanças
+Cada host também precisa de um `hardware-configuration.nix` gerado localmente. Esses arquivos são ignorados pelo Git porque contêm UUIDs de disco e outros detalhes da máquina. Não copie a configuração de hardware da VM para o laptop.
 
-```bash
-# Rebuild do sistema
-sudo nixos-rebuild switch --flake .#nixos
+## Canal NixOS
 
-# Ou usando o alias (após rebuild com zsh)
-update
+Use o canal estável 26.05 nos dois hosts. Execute estes comandos **em um NixOS instalado**, não no Zorin:
 
-# Editar config
-edit
-
-# Validar flake sem aplicar
-nix flake check
+```sh
+sudo nix-channel --add https://nixos.org/channels/nixos-26.05 nixos
+sudo nix-channel --update
 ```
 
-## Flake Inputs
+Sem `flake.lock`, a versão do nixpkgs vem do canal configurado localmente. Atualize o canal deliberadamente e use Git para revisar as mudanças da configuração.
 
-| Input | Fonte | Finalidade |
-|---|---|---|
-| `nixpkgs` | `github:NixOS/nixpkgs/nixos-25.11` | Pacotes base |
-| `home-manager` | `github:nix-community/home-manager/release-25.11` | Config do usuário |
-| `mangowm` | `github:mangowm/mango` | Window manager |
-| `dms` | `github:AvengeMedia/DankMaterialShell/stable` | Shell material |
-| `dgop` | `github:AvengeMedia/dgop` | DMS system monitoring |
-| `quickshell` | `github:quickshell-mirror/quickshell` | QML runtime (≥0.3.0) |
-| `zen-browser` | `github:youwen5/zen-browser-flake` | Zen Browser |
+## Perfis e rebuild
 
-## Keybinds Principais
+Execute a partir da raiz deste repositório, depois de gerar o arquivo local de hardware do host correspondente:
 
-| Atalho | Ação |
-|---|---|
-| `Alt+Return` | Terminal (Alacritty) |
-| `Super+Space` | DMS Spotlight |
-| `Super+Shift+Space` | Trocar layout teclado (us/br) |
-| `Super+F1` | Popup de keybinds |
-| `Super+V` | Clipboard |
-| `Super+N` | Notifications |
-| `Super+M` | Process List |
-| `Alt+Q` | Kill client |
-| `Alt+F` | Toggle fullscreen |
-| `Alt+Backslash` | Toggle floating |
+```sh
+# Laptop
+sudo nixos-rebuild dry-build -I nixos-config="$PWD/configuration.nix"
+sudo nixos-rebuild switch -I nixos-config="$PWD/configuration.nix"
 
-Veja a lista completa em `home/show-keybinds.sh` ou pressione `Super+F1`.
+# VM de teste
+sudo nixos-rebuild dry-build -I nixos-config="$PWD/configuration-vm.nix"
+sudo nixos-rebuild switch -I nixos-config="$PWD/configuration-vm.nix"
+```
 
-## Documentação
+O perfil do laptop usa `system.stateVersion = "26.05"`; o da VM preserva `25.11`. Não altere `stateVersion` em instalações já existentes.
 
-Consulte o diretório `docs/` para documentação detalhada:
+## Módulos de sistema
 
-- [docs/arquitetura.md](docs/arquitetura.md) — Arquitetura do sistema
-- [docs/migracao.md](docs/migracao.md) — Processo de migração do monolítico
-- [docs/desktop.md](docs/desktop.md) — MangoWM + DMS + Wayland
-- [docs/boot.md](docs/boot.md) — GRUB + Plymouth
-- [docs/home-manager.md](docs/home-manager.md) — Configuração do usuário
-- [docs/troubleshooting.md](docs/troubleshooting.md) — Problemas conhecidos
+- `desktop.nix`: LXQt, LightDM, impressão e aplicativos gráficos.
+- `dev-tools.nix`: Git, Neovim, ferramentas de desenvolvimento e OpenCode CLI.
+- `nix-config.nix`: `nix-command`, suporte a binários não livres, `nix-ld`, coleta periódica de lixo e zram.
+- Os demais módulos configuram boot, áudio, idioma, rede, usuário, fontes, Flatpak, Docker e SSH.
 
-## Notas Importantes
+## OpenCode
 
-- **NÃO** execute `sudo nixos-rebuild switch` sem `--flake` — o `/etc/nixos/configuration.nix` antigo ainda existe com Cinnamon/LightDM
-- DMS requer quickshell ≥0.3.0 (upstream flake), não o da nixpkgs 25.11 (0.2.1)
-- MangoWM usa `switch_keyboard_layout`, NÃO `switch_layout` (que muda layout de janelas)
-- GRUB hidden: `timeoutStyle = "hidden"` + `timeout = 0` — Shift/ESC/F4 para mostrar menu
-- Plymouth cobre desde o initrd até o SDDM
+O CLI é instalado como pacote de sistema por `modules/dev-tools.nix`:
+
+```sh
+opencode --version
+```
+
+Preferências e credenciais do OpenCode não são armazenadas neste repositório. Configure a conta no perfil do usuário após a instalação.
+
+## Dotfiles
+
+Não há ativação automática de dotfiles. Copie apenas o que quiser usar:
+
+```sh
+mkdir -p ~/.config/alacritty ~/.config/git
+cp dotfiles/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+cp dotfiles/git/config ~/.config/git/config
+cp dotfiles/zsh/.zshrc ~/.zshrc
+```
+
+Defina seu e-mail do Git localmente em `~/.config/git/config`. A escolha do tema de ícones Papirus pode ser feita nas configurações do LXQt.
+
+## Instalação física
+
+O repositório descreve a configuração do NixOS; não formata discos nem instala o sistema. Antes da instalação, faça backup e gere o arquivo de hardware no laptop. A instalação e o particionamento ficam a cargo do usuário.

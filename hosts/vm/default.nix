@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -17,7 +17,7 @@
     ../../modules/fonts.nix
   ];
 
-  programs.zsh.enable = true;
+  boot.loader.grub.device = "/dev/sda";
 
   system.stateVersion = "25.11";
 }

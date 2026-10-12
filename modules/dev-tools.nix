@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     git
-    neovim
     wget
     curl
     htop
@@ -13,5 +12,18 @@
     gcc
     gnumake
     fastfetch
+    tree
+    jq
+    yq-go
+    file
+    opencode
+    pure-prompt
   ];
+
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
 }

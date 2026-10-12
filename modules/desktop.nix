@@ -1,19 +1,9 @@
-{ pkgs, inputs, ... }:
-
+{ pkgs, ... }:
 {
-  programs.mango.enable = true;
-
-  programs.dank-material-shell = {
-    enable = true;
-    quickshell.package = inputs.quickshell.packages.${pkgs.system}.quickshell;
-    dgop.package = inputs.dgop.packages.${pkgs.system}.default;
-  };
-
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    theme = "${pkgs.catppuccin-sddm}/share/sddm/themes/catppuccin-mocha-mauve";
-  };
+  services.xserver.enable = true;
+  services.xserver.desktopManager.lxqt.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
+  hardware.graphics.enable = true;
 
   services.xserver.xkb = {
     layout = "us,br";

@@ -1,101 +1,33 @@
-# Arquitetura do Sistema
+# Arquitetura
 
-## Visão Geral
+## Dois perfis, módulos compartilhados
 
-O sistema é construído sobre um **flake NixOS** que orquestra configurações em três camadas:
+O sistema usa o mecanismo clássico de módulos NixOS. `configuration.nix` e `configuration-vm.nix` são pontos de entrada distintos; ambos importam os módulos comuns e o hardware local correspondente.
 
-```
-┌─────────────────────────────────────────────┐
-│  flake.nix (entry point)                     │
-│  ├── nixpkgs 25.11                           │
-│  ├── home-manager (config do usuário)        │
-│  ├── MangoWM (window manager)                │
-│  ├── DMS (Dank Material Shell)               │
-│  ├── quickshell (QML runtime)                │
-│  └── dgop (system monitoring)                │
-├─────────────────────────────────────────────┤
-│  hosts/nixos/default.nix                     │
-│  └── Importa todos os módulos                │
-├─────────────────────────────────────────────┤
-│  modules/ (NixOS system-level)               │
-│  ├── boot.nix       ├── desktop.nix          │
-│  ├── fonts.nix      ├── dev-tools.nix        │
-│  ├── users.nix      ├── audio.nix            │
-│  ├── networking.nix ├── ssh.nix              │
-│  ├── docker.nix     ├── flatpak.nix          │
-│  ├── nix-config.nix └── locale.nix           │
-├─────────────────────────────────────────────┤
-│  home/ (home-manager user-level)             │
-│  ├── shell.nix  ├── git.nix                  │
-│  ├── dev.nix    ├── packages.nix             │
-│  ├── zen.nix    ├── mango.nix                │
-│  ├── gtk.nix    └── show-keybinds.sh         │
-└─────────────────────────────────────────────┘
+```text
+configuration.nix ────────┐
+                          ├── hosts/<alvo>/default.nix
+configuration-vm.nix ────┘        ├── hardware-configuration.nix (local)
+                                   └── ../../modules/*.nix
 ```
 
-## Camada 1: NixOS System (modules/)
+O perfil do laptop é o padrão. A configuração da VM permite testar o mesmo desktop e os mesmos pacotes sem atrelar a configuração comum a UUIDs, partições ou ao bootloader de um só computador.
 
-Responsável pela configuração de baixo nível do sistema operacional:
+## Módulos
 
-- **Boot**: GRUB + Plymouth + kernel
-- **Desktop**: SDDM, MangoWM (via NixOS module), DMS, Papirus icons
-- **Fonts**: Nerd-fonts (JetBrains Mono, Fira Code)
-- **Serviços**: PipeWire (áudio), OpenSSH, Docker, Flatpak
-- **Rede**: NetworkManager
-- **Usuário**: mauri com grupos wheel, networkmanager, docker, input
-- **Nix**: Flakes habilitado, allowUnfree, nix-ld
+- `boot.nix`: GRUB com menu visível e Plymouth.
+- `desktop.nix`: X11, LXQt, LightDM, impressão e aplicativos gráficos.
+- `locale.nix`, `networking.nix`, `audio.nix`, `users.nix`: idioma, rede, áudio e usuário.
+- `dev-tools.nix`: ferramentas, Neovim e OpenCode.
+- `nix-config.nix`: opções do Nix, garbage collection e zram.
+- `fonts.nix`, `flatpak.nix`, `docker.nix`, `ssh.nix`: serviços opcionais/complementares.
 
-## Camada 2: Home Manager (home/)
+Os módulos compartilhados continuam declarativos. Os arquivos em `dotfiles/` são configurações normais do usuário que podem ser copiados manualmente.
 
-Gerencia o ambiente do usuário `mauri`:
+## Hardware e privacidade
 
-- **Shell**: Zsh + pure-prompt + autosuggestion + syntax highlighting
-- **Git**: Configuração pessoal
-- **Editor**: Neovim
-- **Apps**: Zen Browser, alacritty, foot
-- **MangoWM**: Config completa com keybinds, regras, aparência
-- **GTK**: Icon theme Papirus-Dark
+Cada host gera seu próprio `hardware-configuration.nix`. Ele é ignorado pelo Git: pode conter UUIDs de sistemas de arquivos, configuração de swap e detalhes de dispositivos. Não o substitua por um arquivo de outro host.
 
-## Camada 3: DMS (Dank Material Shell)
+## Versões
 
-Rodando sobre MangoWM via `exec-once=dms run`:
-
-- Spotlight (Super+Space)
-- Clipboard (Super+V)
-- Process Manager (Super+M)
-- Notifications (Super+N)
-- Settings (Super+,)
-- Wallpaper (Super+Y)
-- Lock Screen (Super+Alt+L)
-- Audio/Brightness controls (media keys)
-
-## Fluxo de Build
-
-```
-nix flake check
-       ↓
-nixos-rebuild switch --flake .#nixos
-       ↓
-┌──────────────┐    ┌──────────────┐
-│  NixOS Gen   │    │ Home Manager │
-│  (system)    │───▶│  (user)      │
-│  - boot      │    │  - shell     │
-│  - desktop   │    │  - mango     │
-│  - fonts     │    │  - git       │
-│  - services  │    │  - gtk       │
-└──────────────┘    └──────────────┘
-```
-
-## Gerações
-
-NixOS mantém um histórico de configurações (gerações). Cada rebuild cria uma nova geração:
-
-```bash
-# Listar gerações
-nixos-rebuild list-generations
-
-# Rollback para geração anterior
-sudo nixos-rebuild switch --rollback
-```
-
-Home Manager também mantém suas próprias gerações, ativadas automaticamente após o rebuild do sistema.
+Sem `flake.lock`, a revisão do nixpkgs vem do canal local. Ambos os hosts devem acompanhar o canal estável 26.05. `system.stateVersion` é uma opção por instalação, não um seletor do canal; não deve ser alterado após a instalação.

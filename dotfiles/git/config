@@ -1,0 +1,9 @@
+[user]
+name = Mauricio
+# Set your own email locally after copying this file.
+
+[init]
+defaultBranch = main
+
+[pull]
+rebase = true

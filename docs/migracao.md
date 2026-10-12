@@ -1,113 +1,31 @@
-# Migração do Monolítico
+# Configuração clássica e instalação
 
-## Situação Inicial
+## Antes de instalar
 
-O sistema original usava um arquivo monolítico `/etc/nixos/configuration.nix` com:
+1. Fazer backup dos dados do Zorin e guardar uma cópia do repositório fora do disco interno.
+2. Inicializar o live USB e confirmar o modo BIOS/UEFI e o dispositivo de instalação.
+3. Gerar o arquivo de hardware **no host correspondente**. O arquivo da VM não serve para o laptop.
+4. Testar `configuration-vm.nix` em NixOS 26.05 antes de usar `configuration.nix` no laptop.
 
-- Desktop Cinnamon (X11)
-- LightDM (display manager)
-- Configuração não modular
-- Sem home-manager
-- Sem flakes
+Este repositório não particiona nem formata o disco. A instalação física é feita separadamente pelo usuário após o backup.
 
-## Problema
+## Canal sem Flakes
 
-Arquivo monolítico único tornava difícil:
-- Versionar configurações
-- Reutilizar módulos
-- Manter configurações específicas do host
-- Gerenciar configurações de usuário separadamente
+No NixOS instalado, configurar o canal estável 26.05 e executar `nix-channel --update`. A configuração NixOS continua modular via `imports`, mas não contém `inputs`, `outputs` ou `flake.lock`. Para atualização, faça primeiro `dry-build` e depois `switch`.
 
-## Solução: Flake Modular
+## Arquivos de hardware
 
-### 1. Criar Flake Base
+O arquivo `hardware-configuration.nix` é gerado localmente e ignorado pelo Git. Para o perfil da VM, preserve a cópia local em `hosts/vm/`; para o laptop, gere outra em `hosts/laptop/`. Nunca commite esses arquivos.
 
-```nix
-# flake.nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
-  };
-  outputs = { self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./hosts/nixos
-        home-manager.nixosModules.home-manager
-      ];
-    };
-  };
-}
+## Perfis
+
+```sh
+# Da raiz do repositório, em um NixOS instalado:
+sudo nixos-rebuild dry-build -I nixos-config="$PWD/configuration-vm.nix"
+sudo nixos-rebuild switch -I nixos-config="$PWD/configuration-vm.nix"
+
+sudo nixos-rebuild dry-build -I nixos-config="$PWD/configuration.nix"
+sudo nixos-rebuild switch -I nixos-config="$PWD/configuration.nix"
 ```
 
-### 2. Extrair Módulos do Monolítico
-
-O arquivo `configuration.nix` original foi decomposto em módulos:
-
-| Monolítico | Modular |
-|---|---|
-| `boot.loader.grub.*` | `modules/boot.nix` |
-| `services.xserver.desktopManager.cinnamon.*` | `modules/desktop.nix` |
-| `i18n.defaultLocale` | `modules/locale.nix` |
-| `networking.networkmanager.*` | `modules/networking.nix` |
-| `services.pipewire.*` | `modules/audio.nix` |
-| `services.openssh.*` | `modules/ssh.nix` |
-| `users.users.mauri.*` | `modules/users.nix` |
-| `nix.settings.*` | `modules/nix-config.nix` |
-
-### 3. Adicionar Home Manager
-
-Home Manager permite gerenciar configurações de usuário de forma declarativa:
-
-```nix
-home-manager.nixosModules.home-manager
-{
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.mauri = {
-      imports = [ ./home ];
-    };
-  };
-}
-```
-
-### 4. Migrar Desktop
-
-A migração do desktop incluiu:
-
-1. **Cinnamon → MangoWM**: Window manager tiling para Wayland
-2. **LightDM → SDDM**: Display manager moderno com suporte Wayland
-3. **X11 → Wayland**: Protocolo gráfico moderno
-4. **Adicionar DMS**: Dank Material Shell para interface material
-
-### 5. Configurar Flake Lock
-
-O `flake.lock` bloqueia versões específicas de cada input:
-
-```bash
-nix flake update                    # Atualizar todos
-nix flake update quickshell         # Atualizar um específico
-```
-
-## Commits da Migração
-
-```
-83e1b2a Initial flake + home-manager setup
-bb4b038 Fix deprecation warnings and update AGENTS.md
-08d5c99 Remove stale root config files
-40e7453 Add legacy config files to .gitignore
-```
-
-## Arquivo Antigo (não usar!)
-
-O `/etc/nixos/configuration.nix` antigo ainda existe com Cinnamon/LightDM. **NÃO** execute:
-
-```bash
-# ERRADO — usa config antiga
-sudo nixos-rebuild switch
-
-# CORRETO — usa flake
-sudo nixos-rebuild switch --flake .#nixos
-```
+O segundo par aplica o perfil do laptop; use-o apenas quando o hardware e o bootloader estiverem configurados para essa máquina.

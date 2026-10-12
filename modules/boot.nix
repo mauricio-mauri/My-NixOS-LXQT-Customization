@@ -1,16 +1,12 @@
-{ pkgs, ... }:
-
+{ ... }:
 {
   boot.loader.grub = {
     enable = true;
-    device = "/dev/sda";
     useOSProber = false;
-    timeoutStyle = "hidden";
+    timeoutStyle = "menu";
   };
 
-  boot.loader.timeout = 0;
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.loader.timeout = 5;
 
   boot.plymouth = {
     enable = true;

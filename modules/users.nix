@@ -4,7 +4,9 @@
   users.users.mauri = {
     isNormalUser = true;
     description = "Mauricio";
-    extraGroups = [ "networkmanager" "wheel" "docker" "input" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
+
+  programs.zsh.enable = true;
 }
