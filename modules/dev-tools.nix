@@ -17,6 +17,7 @@
     yq-go
     file
     # opencode
+	bat
     pure-prompt
     fzf
     zoxide
