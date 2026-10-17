@@ -15,6 +15,7 @@
   environment.systemPackages = with pkgs; [
     alacritty
     foot
+    firefox
     papirus-icon-theme
     kdePackages.dolphin
   ];

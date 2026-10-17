@@ -1,6 +1,8 @@
 [user]
 name = Mauricio
-# Set your own email locally after copying this file.
+# E-mail fica em ~/.config/git/local, fora do repositório.
+[include]
+path = ~/.config/git/local
 
 [init]
 defaultBranch = main

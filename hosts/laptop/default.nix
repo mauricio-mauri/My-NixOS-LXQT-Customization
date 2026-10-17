@@ -15,6 +15,9 @@
     ../../modules/flatpak.nix
     ../../modules/docker.nix
     ../../modules/fonts.nix
+    ../../modules/bluetooth.nix
+    ../../modules/dotfiles.nix
+    # ../../modules/opencode.nix
   ];
 
   boot.loader.grub.device = "/dev/sda";
