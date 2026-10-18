@@ -1,6 +1,8 @@
 # Oh My Zsh e zoxide são carregados pelo NixOS em /etc/zshrc
 # (configurados em modules/dev-tools.nix); não repetir aqui.
 
+bindkey -e
+
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # OpenCode instalado pelo instalador oficial (curl)

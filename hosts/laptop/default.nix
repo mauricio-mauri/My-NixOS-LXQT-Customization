@@ -17,6 +17,8 @@
     ../../modules/fonts.nix
     ../../modules/bluetooth.nix
     ../../modules/dotfiles.nix
+    ../../modules/monsgeek.nix
+    # ../../modules/keyd.nix
     # ../../modules/opencode.nix
   ];
 
