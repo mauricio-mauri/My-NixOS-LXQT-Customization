@@ -16,8 +16,10 @@
     ../../modules/docker.nix
     ../../modules/fonts.nix
     ../../modules/bluetooth.nix
-    ../../modules/dotfiles.nix
+    ../../modules/home.nix
     ../../modules/monsgeek.nix
+    ../../modules/hyprland.nix
+	../../modules/nixvim.nix
     # ../../modules/keyd.nix
     # ../../modules/opencode.nix
   ];

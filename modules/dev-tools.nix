@@ -23,6 +23,7 @@
     zoxide
     zellij
     oh-my-zsh
+    mdcat
   ];
 
   programs.zoxide = {

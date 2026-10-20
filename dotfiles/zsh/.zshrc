@@ -16,6 +16,23 @@ export PATH=$HOME/.opencode/bin:$PATH
 alias edit="nvim ~/My-NixOS-LXQT-Customization/"
 alias update="sudo nixos-rebuild switch -I nixos-config=\"/home/mauri/My-NixOS-LXQT-Customization/configuration.nix\""
 
+# LXQt: os arquivos sao copiados (nao linkados), porque o LXQt os reescreve.
+# panel.conf e lxqt-config-monitor.conf ficam de fora: contem caminhos do
+# /nix/store e geometria de monitores, que mudam entre builds e maquinas.
+lxqt-save() {
+  local repo=~/My-NixOS-LXQT-Customization/dotfiles/lxqt
+  local f
+  for f in ~/.config/lxqt/*.conf; do
+    case "$(basename "$f")" in
+      panel.conf|lxqt-config-monitor.conf) continue ;;
+    esac
+    cp -f "$f" "$repo/"
+  done
+}
+lxqt-apply() {
+  cp -f ~/My-NixOS-LXQT-Customization/dotfiles/lxqt/*.conf ~/.config/lxqt/
+}
+
 # Zellij: abre automaticamente ao iniciar o terminal e fecha o terminal ao encerrar a sessão
 export ZELLIJ_AUTO_EXIT=true
 eval "$(zellij setup --generate-auto-start zsh)"
