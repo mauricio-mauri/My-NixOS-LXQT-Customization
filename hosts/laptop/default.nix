@@ -19,7 +19,7 @@
     ../../modules/home.nix
     ../../modules/monsgeek.nix
     ../../modules/hyprland.nix
-	../../modules/nixvim.nix
+	# ../../modules/nixvim.nix
     # ../../modules/keyd.nix
     # ../../modules/opencode.nix
   ];
