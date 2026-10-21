@@ -1,5 +1,9 @@
 # Hyprland como sessão Wayland do LXQt
 
+> **Desativado.** O Hyprland saiu da build (`modules/hyprland.nix` comentado em
+> `hosts/laptop/default.nix`). O gerenciador de janelas atual é o i3, ver `docs/i3.md`.
+> Este documento fica como referência para reativação.
+
 O Openbox continua sendo a sessão padrão (X11). O Hyprland entra como uma
 sessão Wayland separada, iniciada pela sessão **LXQt (Wayland)** do LightDM.
 Com isso, os serviços do LXQt (painel, pcmanfm-qt, notificações, energia,
@@ -53,6 +57,25 @@ na Intel.
   (volta para o labwc) ou simplesmente escolher o Openbox no login.
 - Sistema: remover `../../modules/hyprland.nix` de `hosts/laptop/default.nix`
   e rodar o `switch`.
+
+## Configuração do Hyprland (sessão "Hyprland")
+
+A sessão Hyprland do LightDM lê `~/.config/hypr/hyprland.lua`. Esse arquivo é
+versionado em `dotfiles/hypr/hyprland.lua` e linkado pelo Home Manager
+(`modules/home.nix`).
+
+Para alterar atalhos ou aparência:
+
+1. Edite `dotfiles/hypr/hyprland.lua` no repositório.
+2. Aplique com `update` (o alias do `.zshrc`).
+3. Recarregue o Hyprland: `hyprctl reload`.
+
+Exemplo: a variável `local terminal` define o terminal aberto pelo `SUPER+Q`.
+Hoje ela vale `"alacritty"`.
+
+Se o Home Manager falhar, veja `journalctl -u home-manager-mauri -b`. Esta
+configuração usa `force = true` nos arquivos gerenciados, porque os links
+antigos da Home já apontavam para o repositório.
 
 ## O que ainda não foi feito
 

@@ -18,7 +18,8 @@
     ../../modules/bluetooth.nix
     ../../modules/home.nix
     ../../modules/monsgeek.nix
-    ../../modules/hyprland.nix
+    # ../../modules/hyprland.nix
+    ../../modules/i3.nix
 	# ../../modules/nixvim.nix
     # ../../modules/keyd.nix
     # ../../modules/opencode.nix

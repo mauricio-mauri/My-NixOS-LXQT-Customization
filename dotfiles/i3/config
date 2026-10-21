@@ -1,0 +1,87 @@
+# i3 na sessão LXQt (X11). A barra é o lxqt-panel, por isso não há bloco "bar".
+# Volume, brilho e Alt+F2 continuam com o lxqt-globalkeys.
+
+set $mod Mod4
+set $term alacritty
+
+font pango:JetBrainsMono Nerd Font 10
+
+default_border pixel 2
+default_floating_border pixel 2
+
+floating_modifier $mod
+
+# O i3 não trata os painéis do LXQt como docks. Eles entram em mosaico, ocupando
+# a linha de cima e a de baixo, e não aceitam flutuar (tamanho fixo). Por isso o
+# auto-hide e a largura configurada no LXQt não têm efeito nesta sessão.
+for_window [class="^lxqt-panel$"] border pixel 0
+
+# A área de trabalho do pcmanfm-qt também vira uma janela em mosaico.
+# O i3 não tem conceito de desktop, então ela vai para o scratchpad.
+for_window [class="^pcmanfm-qt$" title="^pcmanfm-desktop"] move scratchpad
+
+# Fundo da área de trabalho (sem o wallpaper do pcmanfm).
+exec --no-startup-id xsetroot -solid "#1e1e2e"
+
+# Aplicativos
+bindsym $mod+Return exec $term
+bindsym $mod+d exec lxqt-runner
+bindsym $mod+e exec pcmanfm-qt
+
+# Janelas
+bindsym $mod+Shift+q kill
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+space floating toggle
+
+# Foco (setas e hjkl)
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Mover janela
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Divisão e layout
+bindsym $mod+b split h
+bindsym $mod+v split v
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+t layout toggle split
+
+# Áreas de trabalho
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+
+# Sessão
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec lxqt-leave
