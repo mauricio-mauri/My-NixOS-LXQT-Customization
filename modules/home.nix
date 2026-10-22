@@ -1,11 +1,12 @@
 { ... }:
 
 let
-  # Home Manager pinado na mesma versão do canal nixos-26.05.
+  # Home Manager pinado em um commit do branch release-26.05 (mesma versão do canal nixos-26.05).
+  # Pinar o commit (e não o branch) evita que o hash quebre quando o branch avança.
   # Para trocar pelo canal, substitua este bloco por: imports = [ <home-manager/nixos> ];
   home-manager = builtins.fetchTarball {
-    url = "https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz";
-    sha256 = "sha256-AM1HmBeDnB2B3dSiXuCYeu7Me+lHNpz/P39lVxGJBuQ=";
+    url = "https://github.com/nix-community/home-manager/archive/24f8f8e786f87d6a818e1746cb2389bf922afdab.tar.gz";
+    sha256 = "sha256-5mQQOcggBRBXB7NlzUxO0dbvQN4euJOISjNybrtfxPk=";
   };
 
   dotfiles = ../dotfiles;
@@ -43,6 +44,7 @@ in
         "git/config" = managed (dotfiles + "/git/config");
 
         "i3/config".source = dotfiles + "/i3/config";
+        "autostart/cortile.desktop".source = dotfiles + "/autostart/cortile.desktop";
       };
 
       # O LXQt reescreve seus .conf quando você muda algo pela interface.
@@ -60,6 +62,16 @@ in
             run cp "$src" "$lxqtDir/$name"
           fi
         done
+      '';
+
+      # O cortile pode regravar o config.toml (ex.: pela bandeja), então ele
+      # também é copiado apenas na primeira vez.
+      home.activation.cortileConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        cortileDir="$HOME/.config/cortile"
+        run mkdir -p "$cortileDir"
+        if [ ! -e "$cortileDir/config.toml" ]; then
+          run install -m 644 ${dotfiles}/cortile/config.toml "$cortileDir/config.toml"
+        fi
       '';
     };
   };

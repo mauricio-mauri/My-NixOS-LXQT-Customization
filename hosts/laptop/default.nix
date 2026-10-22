@@ -19,7 +19,8 @@
     ../../modules/home.nix
     ../../modules/monsgeek.nix
     # ../../modules/hyprland.nix
-    ../../modules/i3.nix
+    # ../../modules/i3.nix
+    ../../modules/cortile.nix
 	# ../../modules/nixvim.nix
     # ../../modules/keyd.nix
     # ../../modules/opencode.nix

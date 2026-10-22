@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=cortile
+Comment=Tiling automático sobre o Openbox
+Exec=cortile
+X-GNOME-Autostart-enabled=true
