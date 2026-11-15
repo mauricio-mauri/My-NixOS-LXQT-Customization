@@ -157,14 +157,14 @@ Atalhos seus relevantes para o teclado de 60%:
 | `Control%2BAlt%2BE.3` | Abre o pcmanfm-qt |
 | `Control%2BAlt%2BL.5` | Bloqueia a tela |
 | `Control%2BAlt%2BD.2` | Mostra/oculta a área de trabalho |
-| `Super_L.42` | Mostra/oculta o menu principal |
-| `Meta%2B1` a `Meta%2B9` | Ativa a tarefa 1–9 da barra |
+| `Alt+F1` | Mostra/oculta o menu principal |
+| `Meta+0` a `Meta+9` | Ativa as tarefas 1–10 da barra (`Meta+0` = tarefa 10) |
 | `Control%2BF1` a `Control%2BF12` | Vai para o espaço de trabalho 1–12 |
-| `Print.39` | Captura de tela (`screengrab, -f`) |
+| `Print` | Captura de tela (`screengrab, -f`) |
 | `XF86*` | Teclas de mídia (volume, brilho, energia) |
 
-Nota: as entradas `Meta+N` aparecem duas vezes (uma para `taskbar`, outra para
-`taskbar2`), porque há duas barras de tarefas configuradas.
+Nota: as entradas `Meta+0..9` ativam as tarefas da barra `taskbar2`, a única
+configurada hoje.
 
 ---
 
@@ -181,6 +181,30 @@ O comportamento da tampa também é controlado pelo NixOS em
 `modules/monitors.nix` (`services.logind.lidSwitch`). O módulo
 `modules/monitors.nix` está com erro de sintaxe e não é importado por nenhum
 host, então hoje vale o padrão do LXQt.
+
+---
+
+## Bloqueio de tela (XScreenSaver)
+
+O LXQt inicia o XScreenSaver pelo autostart do `lxqt-session`
+(`xscreensaver -no-splash`). O desbloqueio usa PAM: sem
+`/etc/pam.d/xscreensaver`, o PAM cai no `/etc/pam.d/other`
+(`pam_warn` + `pam_deny`) e qualquer senha é recusada, mesmo a correta.
+A sessão não é encerrada; só o desbloqueio falha.
+
+Em `modules/desktop.nix`:
+
+- `security.pam.services.xscreensaver = { enable = true; };` cria o serviço PAM.
+- `security.wrappers.xscreensaver-auth` cria o binário setuid que o
+  xscreensaver procura em `/run/wrappers/bin`.
+
+Verificação:
+
+```sh
+ls -l /run/wrappers/bin/xscreensaver-auth   # deve ter o bit s
+cat /etc/pam.d/xscreensaver                 # deve conter pam_unix
+xscreensaver-command -restart
+```
 
 ---
 

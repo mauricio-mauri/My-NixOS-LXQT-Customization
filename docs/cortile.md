@@ -19,23 +19,36 @@ A configuração é copiada apenas na primeira vez (como o `lxqt-config`), porqu
 cortile pode regravar o arquivo. Para versionar uma mudança feita pela interface,
 copie o arquivo de `~/.config/cortile/config.toml` para `dotfiles/cortile/config.toml`.
 
-## Atalhos principais (Ctrl+Shift)
+## Atalhos principais (Super)
 
 | Atalho | Ação |
 |---|---|
-| `Ctrl+Shift+Home` / `End` | Liga / desliga o tiling na tela atual |
-| `Ctrl+Shift+T` | Alterna ligado/desligado |
-| `Ctrl+Shift+D` | Liga / desliga as decorações da janela |
-| `Ctrl+Shift+R` | Desliga e restaura as janelas |
-| `Ctrl+Shift+Left/Right/Up/Down` | Muda o layout (master à esquerda, direita, topo, base) |
-| `Ctrl+Shift+Space` | Layout maximizado |
-| `Ctrl+Shift+Return` | Tela cheia |
-| `Ctrl+Shift+KP_2` / `KP_8` | Foco na próxima / anterior |
-| `Ctrl+Shift+KP_5` | Torna a janela ativa a master |
-| `Ctrl+Shift+KP_3` / `KP_1` | Aumenta / diminui a área master |
+| `Super+Home` / `Super+End` | Liga / desliga o tiling na tela atual |
+| `Super+T` | Alterna ligado/desligado |
+| `Super+Shift+D` | Liga / desliga as decorações da janela |
+| `Super+R` | Desliga e restaura as janelas |
+| `Super+BackSpace` | Restaura as proporções padrão |
+| `Super+Left/Right/Up/Down` | Muda o layout (master à esquerda, direita, topo, base) |
+| `Super+M` | Layout maximizado |
+| `Super+Return` | Tela cheia |
+| `Super+Next/Prior` | Próximo / anterior ciclo de layout |
+| `Super+KP_2` / `KP_8` | Foco na próxima / anterior |
+| `Super+KP_5` | Torna a janela ativa a master |
+| `Super+KP_3` / `KP_1` | Aumenta / diminui a área master |
+| `Super+Shift+=` / `Super+-` | Aumenta / diminui o número de slaves |
+| `Super+KP_Add` / `KP_Subtract` | Aumenta / diminui o número de masters |
 
-Os atalhos usam `Ctrl+Shift` para não disputar a tecla Super com o `lxqt-globalkeys`.
+`Ctrl+Super+...` aplica o comando a todas as telas; `Alt+Super+...` a todos os workspaces.
 A lista completa está em `dotfiles/cortile/config.toml`, seção `[keys]`.
+
+Alguns atalhos do Openbox e do LXQt continuam reservados:
+
+- `Super+D` mostra a área de trabalho (Openbox); por isso a decoração usa `Super+Shift+D`.
+- `Super+Space` alterna US/BR (`grp:win_space_toggle`); por isso o maximizado usa `Super+M`.
+- `Super+E` abre o Konqueror e `Super+F1..F4` trocam de desktop no Openbox; não use esses combos no cortile.
+- `Super` sozinho foi movido do menu principal para `Alt+F1`, para não abrir o menu no meio dos combos.
+
+Os atalhos antigos `Ctrl+Shift+...` foram removidos: esse espaço volta a pertencer aos aplicativos (por exemplo, `Ctrl+Shift+T` reabre aba no navegador).
 
 ## Ajustes que podem ser necessárioss
 
@@ -97,11 +110,11 @@ relança o painel se ele morrer.
 2. Na sessão real: struts zerados, `_NET_WORKAREA = 0,0,1366,768`, moldura das
    janelas de y=10 a y=758 (gap de 10 px simétrico), decoração não cortada,
    auto-hide do painel funcionando (painel escondido em y=-28, aparece no hover).
-3. Testar `Ctrl+Shift+Home` e os layouts.
+3. Testar `Super+Home` e os layouts.
 
 ## Reverter
 
-- Para voltar a uma sessão sem tiling: `Ctrl+Shift+End` na sessão, ou remover o
+- Para voltar a uma sessão sem tiling: `Super+End` na sessão, ou remover o
   autostart e rodar o `update`.
 - Para voltar ao i3: em `dotfiles/lxqt/session.conf`, use `window_manager=i3`, descomente
   `../../modules/i3.nix` em `hosts/laptop/default.nix` e rode `update`.

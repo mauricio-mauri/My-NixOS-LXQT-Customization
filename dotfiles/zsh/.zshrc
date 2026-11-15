@@ -14,7 +14,29 @@ export PATH=$HOME/.opencode/bin:$PATH
 
 # Aliases
 alias edit="nvim ~/My-NixOS-LXQT-Customization/"
-alias update="sudo nixos-rebuild switch -I nixos-config=\"/home/mauri/My-NixOS-LXQT-Customization/configuration.nix\""
+
+# update: rebuild do NixOS e, se der certo, recarrega a interface LXQt:
+# - openbox --reconfigure: o Openbox ree a configuracao (atalhos, decoracao).
+# - reinicia o lxqt-panel: reaplica tema/icones do painel e rele o menu de
+#   aplicativos. Se o lxqt-session nao relancar o painel, sobe manualmente.
+update() {
+  sudo nixos-rebuild switch -I nixos-config="/home/mauri/My-NixOS-LXQT-Customization/configuration.nix" || return $?
+
+  openbox --reconfigure
+
+  # O painel pode aparecer na lista de processos como
+  # "/run/current-system/sw/bin/lxqt-panel" (sessao) ou "lxqt-panel" (manual).
+  local pid
+  pid=$(pgrep -f '(^|/)lxqt-panel$' | head -1)
+  [ -n "$pid" ] && kill "$pid"
+  sleep 2
+  if ! pgrep -f '(^|/)lxqt-panel$' >/dev/null; then
+    nohup lxqt-panel >/dev/null 2>&1 &
+    sleep 3
+  fi
+  pgrep -f '(^|/)lxqt-panel$' >/dev/null && echo "lxqt-panel recarregado." \
+    || echo "AVISO: lxqt-panel nao voltou; rode 'lxqt-panel' manualmente."
+}
 
 # LXQt: os arquivos sao copiados (nao linkados), porque o LXQt os reescreve.
 # panel.conf e lxqt-config-monitor.conf ficam de fora: contem caminhos do
