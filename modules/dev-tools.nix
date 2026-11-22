@@ -3,9 +3,11 @@
 {
   environment.systemPackages = with pkgs; [
     git
+	gh
     wget
     curl
     htop
+	zip
     unzip
     ripgrep
     fd
